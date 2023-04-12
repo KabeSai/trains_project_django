@@ -24,24 +24,24 @@ class RoutePartViewSet(viewsets.ModelViewSet):
 def index(request):
     station = RailwayStation.objects.all()
     find = TicketSearchForm()
-    first_routes = RoutePart.objects.filter(start_id='839b23f0-af64-48c5-8796-ac9cc0b27521',
-                                          departure__gte='2023-04-06',
-                                          departure__lte='2023-04-07')
-    second_routes = RoutePart.objects.filter(stop_uuid='39b3e590-c684-4127-8dd1-09cba5926403')
-    my_first_set, my_seocnd_set = set(), set()
-    for element in first_routes:
-        my_first_set.add(element.route_uuid)
-    for element in second_routes:
-        my_seocnd_set.add(element.route_uuid)
-    suitable_routes = my_first_set & my_seocnd_set
-    route_parts = [RoutePart.objects.filter(route_uuid=el.id) for el in suitable_routes]
-    start_parts = []
-    for el in route_parts[0]:
-        part = RoutePart.objects.filter(order=1, route_uuid=el.route_uuid)
-        if part not in start_parts:
-            start_parts.append(part)
-    for el in set(start_parts):
-        print(el)
+    # first_routes = RoutePart.objects.filter(start_id='839b23f0-af64-48c5-8796-ac9cc0b27521',
+    #                                       departure__gte='2023-04-06',
+    #                                       departure__lte='2023-04-07')
+    # second_routes = RoutePart.objects.filter(stop_uuid='39b3e590-c684-4127-8dd1-09cba5926403')
+    # my_first_set, my_seocnd_set = set(), set()
+    # for element in first_routes:
+    #     my_first_set.add(element.route_uuid)
+    # for element in second_routes:
+    #     my_seocnd_set.add(element.route_uuid)
+    # suitable_routes = my_first_set & my_seocnd_set
+    # route_parts = [RoutePart.objects.filter(route_uuid=el.id) for el in suitable_routes]
+    # start_parts = []
+    # for el in route_parts[0]:
+    #     part = RoutePart.objects.filter(order=1, route_uuid=el.route_uuid)
+    #     if part not in start_parts:
+    #         start_parts.append(part)
+    # for el in set(start_parts):
+    #     print(el)
     return render(request, 'tickets/index.html', {'form' : find, 'station': station})
 
 
