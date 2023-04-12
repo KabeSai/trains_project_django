@@ -1,0 +1,57 @@
+        
+with suitable_routes as (select route_uuid_id
+						 from route_part
+                         where start_id = '839b23f0-af64-48c5-8796-ac9cc0b27521'
+                           and departure >= '2023-04-06'
+                           and departure  <= '2023-04-07'
+                         intersect
+                         select route_uuid_id
+                         from route_part
+                         where stop_uuid_id = '39b3e590-c684-4127-8dd1-09cba5926403'),
+     route_parts as (select *
+                     from route_part
+                     where route_uuid_id in (select route_uuid_id from suitable_routes)),
+     start_parts as (select p.route_uuid_id as route_id,
+                            rs.name      as start_station_name,
+                            p.departure  as start_datetime
+                     from (select *
+                           from (select row_number() over (partition by route_uuid_id order by "order") as row_num, *
+                                 from route_parts) x
+                           where row_num = 1) as p
+                              join railway_station rs on p.start_id = rs.id),
+     end_parts as (select p.route_uuid_id as route_id,
+                          rs.name      as end_station_name,
+                          p.arrival    as end_datetime
+                   from (select *
+                         from (select row_number() over (partition by route_uuid_id order by "order" desc ) as row_num, *
+                               from route_parts) x
+                         where row_num = 1) as p
+                            join railway_station rs on p.stop_uuid_id = rs.id),
+     departure_parts as (select p.route_uuid_id as route_id,
+                                rs.name      as departure_station_name,
+                                p.arrival    as departure_datetime
+                         from route_part p
+                                  join railway_station rs on p.start_id = rs.id
+                         where route_uuid_id in (select route_uuid_id from suitable_routes)
+                           and start_id = '839b23f0-af64-48c5-8796-ac9cc0b27521'),
+     arrival_parts as (select p.route_uuid_id as route_id,
+                              rs.name      as arrival_station_name,
+                              p.arrival    as arrival_datetime
+                       from route_part p
+                                join railway_station rs on p.stop_uuid_id = rs.id
+                       where route_uuid_id in (select route_uuid_id from suitable_routes)
+                         and stop_uuid_id = '39b3e590-c684-4127-8dd1-09cba5926403')
+
+select sp.route_id,
+       sp.start_station_name,
+       sp.start_datetime,
+       dp.departure_station_name,
+       dp.departure_datetime,
+       ap.arrival_station_name,
+       ap.arrival_datetime,
+       ep.end_station_name,
+       ep.end_datetime
+from start_parts sp
+         join end_parts ep on sp.route_id = ep.route_id
+         join departure_parts dp on sp.route_id = dp.route_id
+         join arrival_parts ap on sp.route_id = ap.route_id;
