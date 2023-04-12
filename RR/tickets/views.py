@@ -51,7 +51,7 @@ def scheme(request):
 
 def tickets(request):
 
-    return render(request, 'tickets/tickets.html', {'tickets': 1})
+    return render(request, 'tickets/tickets.html', {'tickets': []})
 
 def register(request):
     if request.method == 'POST':
