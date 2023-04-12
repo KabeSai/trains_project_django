@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tickets</title>
+</head>
+<body>
+    <h1>Tickets</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Start</th>
+                <th>Stop UUID</th>
+                <th>Route UUID</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+                <p>{{ ticket }}</p>
+            {% endfor %}
+        </tbody>
+
+        <h1>
+            departure_city=Москва&arrival_city=Питер&departure_date=2023-04-21&arrival_date=
+        </h1>
+    </table>
+</body>
+</html>

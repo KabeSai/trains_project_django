@@ -1,0 +1,15 @@
+docker run -d\
+    --name trains -p 5555:5432 \
+    -v $HOME/postgresql/RR_final:/var/lib/postgresql/RR_final \
+    -e POSTGRES_PASSWORD=0000 \
+    -e POSTGRES_USER=postgres \
+    -e POSTGRES_DB=trains_db \
+    postgres:15.1
+
+
+psql -h 127.0.0.1 -p 5555 -U postgres trains_db -f init_db.ddl
+
+
+
+
+

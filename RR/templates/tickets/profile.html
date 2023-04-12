@@ -1,0 +1,18 @@
+{% extends 'tickets/base.html' %}
+{% load static %}
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'tickets/css/profile.css' %}">
+</head>
+<div class="profile-block">
+  <h1>Профиль</h1>
+  <p>Имя: {{ passenger.user.first_name }}</p>
+  <p>Фамилия: {{ passenger.user.last_name }}</p>
+  <p>Почта: {{ passenger.user.email }}</p>
+  <p>Телефон: {{ passenger.number }}</p>
+  <form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Выйти</button>
+  </form>
+</div>
+{% endblock %}
